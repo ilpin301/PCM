@@ -13,28 +13,28 @@ Keep the Wiki healthy: rebuild indexes, update the manifest, and run all gates.
 ## Steps
 
 1. Rebuild all generated artifacts:
-   ```bash
-   python3 scripts/wiki_tool.py build
+   ```powershell
+   python scripts/wiki_tool.py build
    ```
 2. Validate compiled Wiki notes:
-   ```bash
-   python3 scripts/wiki_tool.py lint
+   ```powershell
+   python scripts/wiki_tool.py lint
    ```
 3. Update the source manifest:
-   ```bash
-   python3 scripts/wiki_tool.py source-scan --update --accept-covered
+   ```powershell
+   python scripts/wiki_tool.py source-scan --update --accept-covered
    ```
 4. Validate source coverage:
-   ```bash
-   python3 scripts/wiki_tool.py source-lint
+   ```powershell
+   python scripts/wiki_tool.py source-lint
    ```
 5. Check for secrets or local paths:
-   ```bash
-   python3 scripts/audit_public.py
+   ```powershell
+   python scripts/audit_public.py
    ```
 6. Run doctor for a summary:
-   ```bash
-   python3 scripts/wiki_tool.py doctor
+   ```powershell
+   python scripts/wiki_tool.py doctor
    ```
 
 ## What Gets Regenerated

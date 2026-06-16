@@ -13,8 +13,8 @@ Answer questions using the compiled Wiki, minimizing unnecessary Raw source read
 
 1. Start with `Wiki/index.md` for a high-level map of available topics.
 2. Search the catalog for the most relevant notes:
-   ```bash
-   python3 scripts/wiki_tool.py search-catalog --query "<user's question or key terms>"
+   ```powershell
+   python scripts/wiki_tool.py search-catalog --query "<user's question or key terms>"
    ```
 3. Open the top matching Wiki notes.
 4. Answer from the compiled Wiki notes.

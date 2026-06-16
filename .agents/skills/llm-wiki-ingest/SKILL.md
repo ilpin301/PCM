@@ -12,8 +12,8 @@ Compile one or more Raw source notes into focused, reusable Wiki notes.
 ## Steps
 
 1. Search the catalog for related existing notes:
-   ```bash
-   python3 scripts/wiki_tool.py search-catalog --query "<relevant terms from source>"
+   ```powershell
+   python scripts/wiki_tool.py search-catalog --query "<relevant terms from source>"
    ```
 2. Read the Raw source file.
 3. Open only the most relevant existing Wiki notes (not all of them).
@@ -24,11 +24,11 @@ Compile one or more Raw source notes into focused, reusable Wiki notes.
 6. Set `source_count` equal to the number of entries in `sources`.
 7. Mark the Raw source as processed: set `Processed: true`.
 8. Run the post-ingest maintenance gate:
-   ```bash
-   python3 scripts/wiki_tool.py build
-   python3 scripts/wiki_tool.py lint
-   python3 scripts/wiki_tool.py source-scan --update --accept-covered
-   python3 scripts/wiki_tool.py source-lint
+   ```powershell
+   python scripts/wiki_tool.py build
+   python scripts/wiki_tool.py lint
+   python scripts/wiki_tool.py source-scan --update --accept-covered
+   python scripts/wiki_tool.py source-lint
    ```
 9. Add a log entry if the ingest meaningfully changed the Wiki.
 

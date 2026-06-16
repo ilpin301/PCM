@@ -14,12 +14,12 @@ Validate the Wiki for schema compliance, broken source links, and coverage gaps.
 
 Run these commands in order:
 
-```bash
-python3 scripts/wiki_tool.py doctor
-python3 scripts/wiki_tool.py build
-python3 scripts/wiki_tool.py lint
-python3 scripts/wiki_tool.py source-lint
-python3 scripts/audit_public.py
+```powershell
+python scripts/wiki_tool.py doctor
+python scripts/wiki_tool.py build
+python scripts/wiki_tool.py lint
+python scripts/wiki_tool.py source-lint
+python scripts/audit_public.py
 ```
 
 ## What Each Check Does

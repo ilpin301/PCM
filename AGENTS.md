@@ -29,7 +29,7 @@ This vault separates two distinct layers:
 
 1. Search `Wiki/catalog.jsonl` before opening any Raw sources:
    ```bash
-   python3 scripts/wiki_tool.py search-catalog --query "your topic"
+   python scripts/wiki_tool.py search-catalog --query "your topic"
    ```
 2. Open relevant Wiki notes.
 3. Open Raw sources only when the compiled note is insufficient or the user needs source-level verification.
@@ -39,19 +39,19 @@ This vault separates two distinct layers:
 
 Run the full maintenance gate:
 
-```bash
-python3 scripts/wiki_tool.py doctor
-python3 scripts/wiki_tool.py build
-python3 scripts/wiki_tool.py lint
-python3 scripts/wiki_tool.py source-lint
-python3 scripts/audit_public.py
+```powershell
+python scripts/wiki_tool.py doctor
+python scripts/wiki_tool.py build
+python scripts/wiki_tool.py lint
+python scripts/wiki_tool.py source-lint
+python scripts/audit_public.py
 ```
 
 After source ingestion, also run:
 
-```bash
-python3 scripts/wiki_tool.py source-scan --update --accept-covered
-python3 scripts/wiki_tool.py source-lint
+```powershell
+python scripts/wiki_tool.py source-scan --update --accept-covered
+python scripts/wiki_tool.py source-lint
 ```
 
 ### PDF Files in Raw/Files/
@@ -69,7 +69,10 @@ python3 scripts/wiki_tool.py source-lint
 ### Security
 
 - Never commit secrets, private keys, machine-local paths, or plugin/cache state.
-- Run `python3 scripts/audit_public.py` to catch these before committing.
+- Run `python scripts/audit_public.py` to catch these before committing.
+- Never edit raw exports.
+- Never invent frequencies.
+- Never present a tiny sample as a dataset-wide truth.
 
 ## Folder Map
 
@@ -82,6 +85,8 @@ Wiki/Entities/   — people, tools, organizations
 Wiki/Projects/   — project-level notes
 Wiki/Logs/       — log and change notes
 Schema/          — rules, schemas, and the source manifest
+Samples/         - not for wiki processing, just samples of style and structure for some out creation
+Autors           - not for wiki processing, its names of autors for notebookLM creation
 _templates/      — note templates
 .agents/skills/  — agent skill definitions
 scripts/         — deterministic tooling
