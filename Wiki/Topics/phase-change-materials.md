@@ -14,7 +14,9 @@ sources:
   - "Raw/Sources/Prof Robert Simpson From data storage to programmable photonics.md"
   - "Raw/Sources/Are Phase Change Materials the Future of Water Heaters.md"
   - "Raw/Sources/Cooling AI How Phase Change Materials Make a Difference.md"
-source_count: 8
+  - "Raw/Sources/piperidou-2025-gst-sb2te3-superlattices.md"
+  - "Raw/Sources/widmann-2026-gst-in2te3-superlattices.md"
+source_count: 10
 aliases:
   - "PCMs"
   - "phase change materials"
@@ -67,6 +69,8 @@ Both phases are (meta-)stable at room temperature for years to decades. Switchin
 - [[pcm-crystallization-ostwald-rule]] — Two-step RS→hex pathway, Trg ≈ 0.5, nucleation vs. growth regimes
 - [[ml-potentials-pcm-simulation]] — GAP/ACE machine-learned potentials for device-scale GST and Te simulations
 - [[pcm-visible-photonics]] — Wide-bandgap PCMs for visible metamaterials; metal compatibility; TiN preferred
+- [[pcm-superlattices]] — Ultrathin layered PCMs; energy-efficient switching; melt-quench vs. crystal–crystal debate
+- [[metavalent-bonding-pcm]] — Metavalent vs. covalent bonding, PME indicator, bond-confinement hypothesis
 
 ## Sources
 
@@ -78,3 +82,5 @@ Both phases are (meta-)stable at room temperature for years to decades. Switchin
 - [[Prof Robert Simpson From data storage to programmable photonics]] — Metal compatibility, Sb₂S₃, visible photonics
 - [[Are Phase Change Materials the Future of Water Heaters]] — Thermal latent-heat PCMs for residential use
 - [[Cooling AI How Phase Change Materials Make a Difference]] — PCM-TES for data centre cooling (SINTEF La-Flex)
+- [[piperidou-2025-gst-sb2te3-superlattices]] — GST-124/Sb₂Te₃ superlattices; APT melt-quench evidence; bond confinement
+- [[widmann-2026-gst-in2te3-superlattices]] — GST-124/In₂Te₃ metavalent–covalent superlattices; optical switching; annealing
