@@ -5,6 +5,7 @@ import argparse
 import json
 import statistics
 import subprocess
+import sys
 from collections import Counter
 
 
@@ -170,6 +171,11 @@ def extract_pages(pdf_path, engine="auto"):
 
 
 def main(argv=None):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
     parser = argparse.ArgumentParser(description="Local low-token PDF text extractor.")
     parser.add_argument("pdf", help="path to the PDF file")
     parser.add_argument(

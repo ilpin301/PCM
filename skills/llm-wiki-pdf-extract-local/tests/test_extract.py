@@ -141,3 +141,22 @@ def test_cli_prints_expected_json(tmp_path):
     }
     assert data["scanned"] is False
     assert "## Big Heading" in data["body"]
+
+
+def test_cli_handles_non_ascii_body(tmp_path):
+    """CLI must not crash on non-ASCII text (UnicodeEncodeError on Windows cp1251)."""
+    pdf = tmp_path / "nonascii.pdf"
+    doc = fitz.open()
+    page = doc.new_page()
+    page.insert_text((72, 72), "Frühjahr Müller ú ñ", fontsize=11)
+    body_text = "Frühjahr Müller ú ñ sentence. " * 6
+    page.insert_text((72, 110), body_text, fontsize=11)
+    doc.save(str(pdf))
+    doc.close()
+
+    proc = subprocess.run(
+        [sys.executable, EXTRACT, str(pdf), "--engine", "fitz"],
+        capture_output=True, text=True, encoding="utf-8", check=True,
+    )
+    data = json.loads(proc.stdout)
+    assert "Müller" in data["body"] or "Frühjahr" in data["body"]
