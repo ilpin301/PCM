@@ -2,6 +2,7 @@
 """Low-token local PDF -> markdown extractor for llm-wiki-pdf-extract-local."""
 
 import statistics
+import subprocess
 from collections import Counter
 
 
@@ -94,3 +95,73 @@ def build_body(pages):
         else:
             rendered.append(block[1])
     return "\n\n".join(rendered)
+
+
+def _extract_with_fitz(pdf_path):
+    import fitz
+
+    doc = fitz.open(pdf_path)
+    pages = []
+    page_texts = []
+    try:
+        for page in doc:
+            lines = []
+            text_chunks = []
+            data = page.get_text("dict")
+            for block in data.get("blocks", []):
+                for line in block.get("lines", []):
+                    spans = line.get("spans", [])
+                    if not spans:
+                        continue
+                    line_text = "".join(s.get("text", "") for s in spans)
+                    max_size = max((s.get("size", 0.0) for s in spans), default=0.0)
+                    if line_text.strip():
+                        lines.append((line_text, max_size))
+                        text_chunks.append(line_text)
+            pages.append(lines)
+            page_texts.append("\n".join(text_chunks))
+    finally:
+        doc.close()
+    return pages, page_texts
+
+
+def _extract_with_pdftotext(pdf_path):
+    out = subprocess.run(
+        ["pdftotext", "-layout", pdf_path, "-"],
+        capture_output=True, text=True, check=True,
+    ).stdout
+    page_texts = out.split("\f")  # pdftotext separates pages with form feeds
+    page_texts = [p for p in page_texts if p.strip()] or [out]
+    pages = [
+        [(ln, 1.0) for ln in p.splitlines() if ln.strip()]
+        for p in page_texts
+    ]
+    return pages, page_texts
+
+
+def extract_pages(pdf_path, engine="auto"):
+    if engine == "auto":
+        try:
+            import fitz  # noqa: F401
+            engine = "fitz"
+        except ImportError:
+            engine = "pdftotext"
+
+    if engine == "fitz":
+        pages, page_texts = _extract_with_fitz(pdf_path)
+    elif engine == "pdftotext":
+        pages, page_texts = _extract_with_pdftotext(pdf_path)
+    else:
+        raise ValueError(f"unknown engine: {engine}")
+
+    page_count = len(page_texts)
+    total_chars = sum(len(t) for t in page_texts)
+    avg = (total_chars / page_count) if page_count else 0.0
+    first_pages_text = "\n\n".join(page_texts[:2])
+    return {
+        "pages": pages,
+        "first_pages_text": first_pages_text,
+        "page_count": page_count,
+        "avg_chars_per_page": avg,
+        "engine": engine,
+    }

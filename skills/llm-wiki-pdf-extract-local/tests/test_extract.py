@@ -80,3 +80,38 @@ def test_build_body_drops_running_furniture():
 def test_build_body_dehyphenates_across_lines():
     pages = [[("hyphen-", 10.0), ("ation works", 10.0)]]
     assert "hyphenation works" in build_body(pages)
+
+
+import fitz  # PyMuPDF, used only to synthesize a test PDF
+from extract import extract_pages
+
+
+def _make_pdf(path):
+    doc = fitz.open()
+    page = doc.new_page()
+    page.insert_text((72, 72), "Big Heading", fontsize=20)
+    page.insert_text((72, 110), "Normal body sentence here.", fontsize=11)
+    doc.save(str(path))
+    doc.close()
+
+
+def test_extract_pages_fitz_captures_sizes_and_headings(tmp_path):
+    pdf = tmp_path / "sample.pdf"
+    _make_pdf(pdf)
+    result = extract_pages(str(pdf), engine="fitz")
+    assert result["engine"] == "fitz"
+    assert result["page_count"] == 1
+    assert result["avg_chars_per_page"] > 0
+    sizes = {round(size) for page in result["pages"] for _, size in page}
+    assert 20 in sizes and 11 in sizes
+    from extract import build_body
+    assert "## Big Heading" in build_body(result["pages"])
+
+
+def test_extract_pages_pdftotext_fallback_has_text_no_headings(tmp_path):
+    pdf = tmp_path / "sample.pdf"
+    _make_pdf(pdf)
+    result = extract_pages(str(pdf), engine="pdftotext")
+    assert result["engine"] == "pdftotext"
+    assert "Big Heading" in result["first_pages_text"]
+    assert all(size == 1.0 for page in result["pages"] for _, size in page)
