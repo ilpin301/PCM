@@ -5,11 +5,12 @@ topics:
   - "phase-change-materials"
 status: seed
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-06-17
 sources:
   - "Raw/Sources/piperidou-2025-gst-sb2te3-superlattices.md"
   - "Raw/Sources/widmann-2026-gst-in2te3-superlattices.md"
-source_count: 2
+  - "Raw/Sources/transmission-electron-microscopy-of-sb2te3-thin-films-and-getesb2te3-superlattic.md"
+source_count: 3
 aliases:
   - "PCM superlattices"
   - "phase-change superlattices"
@@ -61,15 +62,49 @@ Thinner supercells (N:2) recrystallize by growth only and faster; thicker (N:8) 
 
 Most SL studies pair two **metavalent** PCMs (GST-124/Sb₂Te₃, GeTe/Sb₂Te₃). Widmann's thesis instead pairs metavalent GST-124 with **covalent, non-PCM In₂Te₃** (see [[In2Te3]]), creating a metavalent–covalent interface. These SLs do **not** form conventional vdW heterointerfaces, so their switching cannot be explained by electro-thermal confinement alone; they also show sharper PTE transitions than conventional GST. **Annealing degrades** their efficiency, likely through intermixing (InSb formation).
 
+## TEM of GeTe/Sb₂Te₃ Superlattices: Growth, Intermixing, and Switching Prospects (Momand 2014)
+
+A detailed cross-sectional TEM study (Groningen/European IPCM consortium) of MBE-grown and sputtered GeTe/Sb₂Te₃ SLs on Si(111) with and without Sb-passivation.
+
+### Sb₂Te₃ Growth on Si(111) and Rotational Domains
+
+MBE-grown Sb₂Te₃ on the bare Si(111) 7×7 reconstructed surface forms **rotational domains** at ±5.7° and ±16° because the 2D Sb₂Te₃ layer forms a coincidence-site lattice (CSL) with the *7×7 reconstructed* (not 1×1) Si surface. Passivating Si(111) with a monolayer of Sb to form a (√3×√3)R30° surface **eliminates rotational domains** and dramatically improves epitaxial quality. The Sb monolayer bonds via vdW to the subsequently deposited quintuple layers, and this vdW bonding character persists even after thermal reconfiguration — explaining the improved epitaxy.
+
+### As-Deposited Superlattice Structure: Not Pure GeTe + Sb₂Te₃
+
+Cross-sectional TEM with EDX and Z-contrast (HAADF-STEM) shows that during deposition the SL does **not** form as discrete GeTe and Sb₂Te₃ phases. Instead, **phase intermixing** occurs, producing **SbTe₂-(GeTe)m blocks** whose crystal structure closely resembles the **"Kooi structure"** — the thermodynamically stable ground-state polymorph of (GeTe)m(Sb₂Te₃)n compounds where GeTe blocks are *intercalated within* Sb₂Te₃ quintuple layers (vdW gap falls within Sb₂Te₃, not within GeTe). This contrasts with the Petrov sequence (vdW gap inside GeTe block), which is unphysical for bulk GeTe.
+
+### Crystal Structure Terminology (IPCM switching theory)
+
+| Sequence | vdW gap location | Ground state? | IPCM relevance |
+|----------|-----------------|---------------|----------------|
+| **Kooi** | within Sb₂Te₃ QL | Yes (lowest E at 0 K, DFT) | Thermodynamic minimum; not the switching state |
+| **Petrov** | within GeTe | No | Historical; artificially separates GeTe and Sb₂Te₃ blocks |
+| **Ferro-GeTe** | variant | Preferred at 500 K | Proposed IPCM "off" state (NI with Rashba splitting) |
+| **Inverted-Petrov** | variant | Preferred at 500 K | Proposed IPCM "on" state (Dirac semimetal surface states) |
+
+DFT+MD (0 K/500 K): switching at device temperatures would occur between **Ferro-GeTe** (NI) and **Inverted-Petrov** (TI/Dirac semimetal), each accessible by an umbrella-flip of Ge atoms — the same mechanism proposed for conventional GST, but here driving a NI↔TI transition rather than an amorphous↔crystalline one.
+
+### Annealing: Reconfiguration into vdW Layered Phases
+
+On annealing, superlattices prefer to reconfigure into **7- or 9-layer vdW structures** corresponding to Ge₁Sb₂Te₄ and Ge₂Sb₂Te₅ alloys. However, EDX and Z-contrast TEM show this reconfiguration cannot happen directly from the initial intermixed state without Ge redistribution — a kinetic barrier that persists across the temperature range studied (250–400 °C for 30 min).
+
+### Electronic Switching Not Yet Achieved
+
+At the sublayer thicknesses studied (GeTe sublayers typically 2–5 nm), electronic switching was **not observed**, attributed to excessively large GeTe sublayer thickness. Two pathways proposed: (1) reduce sublayer thickness during growth, or (2) use thermally driven compositional engineering to reduce the *effective* GeTe thickness in large-sublayer SLs before attempting electrical switching.
+
 ## Related Concepts
 
 - [[metavalent-bonding-pcm]] — bonding character, PME indicator, and the bond-confinement hypothesis
 - [[In2Te3]] — covalent non-PCM used as a confinement layer
 - [[pcm-crystallization-ostwald-rule]] — nucleation vs. growth, TTT kinetics, stochastic crystallization
 - [[pcm-memory-switching-speed]] — switching speed in bulk PCMs
+- [[pcm-crystal-structure-bonding]] — Kooi vs. Petrov structure; umbrella-flip mechanism
+- [[chalcogenide-nanowires-pcm]] — topological insulator aspect shared with Sb₂Te₃, Bi₂Se₃
 - [[phase-change-materials]] — parent topic
 
 ## Sources
 
 - [[piperidou-2025-gst-sb2te3-superlattices]] — GST-124/Sb₂Te₃ SLs; APT melt-quench evidence; bond-confinement hypothesis
 - [[widmann-2026-gst-in2te3-superlattices]] — GST-124/In₂Te₃ (metavalent–covalent) SLs; optical switching; annealing effects
+- [[transmission-electron-microscopy-of-sb2te3-thin-films-and-getesb2te3-superlattic]] — TEM of MBE/PVD GeTe/Sb₂Te₃ SLs; rotational domains; Kooi/Petrov structures; annealing reconfiguration

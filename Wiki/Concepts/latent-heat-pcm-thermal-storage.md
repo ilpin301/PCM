@@ -5,11 +5,17 @@ topics:
   - "phase-change-materials"
 status: draft
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-06-17
 sources:
   - "Raw/Sources/Are Phase Change Materials the Future of Water Heaters.md"
   - "Raw/Sources/Cooling AI How Phase Change Materials Make a Difference.md"
-source_count: 2
+  - "Raw/Sources/nanoencapsulation-of-phase-change-materials-for-advanced-thermal-energy-storage.md"
+  - "Raw/Sources/ini-alkanes-phase-change-materials-and-their-microencapsulation-for-thermal-ener.md"
+  - "Raw/Sources/additive-manufacturing-for-phase-change-thermal-energy-storage-and-management.md"
+  - "Raw/Sources/advances-in-phase-change-materials-for-thermal-energy-storage-and-management-cha.md"
+  - "Raw/Sources/analysis-of-the-thermal-stability-of-pcms-and-its-effect-on-energy-storage-effic.md"
+  - "Raw/Sources/multifunctional-electrospun-phase-change-material-mats-for-solarthermal-energy-s.md"
+source_count: 8
 aliases:
   - "thermal PCM"
   - "latent heat storage"
@@ -64,3 +70,22 @@ Thermal PCMs exploit the latent heat of a solid–liquid phase transition to sto
 - **Weight**: heavier than conventional insulation; installation must prevent PCM cells from being punctured or sagging.
 - **Cost**: 2.5–14× more expensive than conventional insulation upfront; improving as scale-up and bio-based alternatives emerge.
 - **Awareness and regulation**: limited consumer awareness; subsidy frameworks still developing.
+- **Low thermal conductivity**: most organic PCMs have λ ~ 0.1–0.5 W m⁻¹ K⁻¹, limiting charge/discharge rate; addressed by conductive additives (see [[pcm-thermal-conductivity-enhancement]]).
+- **Leakage**: solid–liquid transition causes flow; requires containment by encapsulation (see [[pcm-microencapsulation]]) or form-stabilisation in a matrix.
+- **Supercooling**: salt hydrates in particular may require cooling well below T_M before crystallising; dramatically reduces effective utilisation. Encapsulation partly mitigates this for organics.
+
+## TES Classification
+
+Three approaches to thermal energy storage (Abhat 1983 classification):
+1. **Sensible heat storage (SHS)**: simple, developed to industrial scale; low density; energy proportional to ΔT.
+2. **Latent heat storage (LHS / PCMs)**: higher density; at pilot plant scale; isothermal operation.
+3. **Thermochemical storage (TCS)**: highest density (5–10× LHS); lab scale only; requires long-term stable reversible reactions.
+
+PCMs are the immediate priority for near-term energy storage deployment.
+
+## Extended Applications (TES Sources 2026)
+
+- **Electronics cooling**: PCM heat sinks absorb transient heat spikes (laser pulses, CPU bursts, EV battery surges) at constant temperature; see [[pcm-battery-thermal-management]].
+- **Solar thermal**: concentrated solar power plants use high-T PCMs (salts, metals, T > 300 °C) for overnight energy dispatch.
+- **Textile thermoregulation**: PCM microcapsules or electrospun fibres in smart fabrics; see [[electrospun-pcm-mats-photothermal]].
+- **Additive manufacturing**: 3D-printed PCM composite structures for optimised TES device geometries; see [[tes-additive-manufacturing]].
