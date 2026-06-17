@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import re
 import statistics
 import subprocess
 import sys
@@ -23,21 +24,46 @@ def join_dehyphenated(lines):
     return out
 
 
-def find_running_lines(pages_text, min_ratio=0.6, max_len=80):
-    """Stripped line strings recurring on >= min_ratio of pages (headers/footers)."""
+_TRAILING_PAGENUM = re.compile(r"[\s.,;:/–—-]*\d+\s*$")
+
+
+def _furniture_key(line):
+    """Normalize a line for furniture detection: drop a trailing page number and
+    collapse internal whitespace. Returns '' for lines that are only a number."""
+    s = line.strip()
+    s = _TRAILING_PAGENUM.sub("", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def _is_page_number(line):
+    """True for a bare, page-number-like line (1-4 digits only)."""
+    return re.fullmatch(r"\d{1,4}", line.strip()) is not None
+
+
+def find_running_lines(pages_text, min_ratio=0.6):
+    """Normalized line-forms that recur on >= min_ratio of pages (headers/footers).
+
+    Lines are normalized with `_furniture_key` so footers that differ only by a
+    trailing page number collapse to one key. Pure-number lines normalize to '' and
+    are excluded here (bare page numbers are handled by `_is_page_number` in
+    `build_body`). Long lines are no longer exempt: recurrence across most pages is
+    the furniture signal.
+    """
     n = len(pages_text)
     if n == 0:
         return set()
     counts = Counter()
     for lines in pages_text:
-        for s in {ln.strip() for ln in lines if ln.strip()}:
-            counts[s] += 1
+        keys = {
+            _furniture_key(ln)
+            for ln in lines
+            if ln.strip() and _furniture_key(ln)
+        }
+        for k in keys:
+            counts[k] += 1
     threshold = min_ratio * n
-    return {
-        s
-        for s, c in counts.items()
-        if (c >= threshold and len(s) <= max_len) or s.isdigit()
-    }
+    return {k for k, c in counts.items() if c >= threshold}
 
 
 def is_heading(size, body_median):
@@ -59,13 +85,23 @@ def is_scanned(avg_chars_per_page, threshold=100.0):
 def build_body(pages):
     """Assemble cleaned markdown from pages of (line_text, font_size) tuples."""
     pages_text = [[t for t, _ in page] for page in pages]
-    running = find_running_lines(pages_text, min_ratio=2.0 if len(pages_text) == 1 else 0.6)
+    running = find_running_lines(
+        pages_text, min_ratio=2.0 if len(pages_text) == 1 else 0.6
+    )
+
+    def is_furniture(text):
+        t = text.strip()
+        if not t:
+            return False
+        if _is_page_number(t):
+            return True
+        return _furniture_key(t) in running
 
     sizes = [
         size
         for page in pages
         for text, size in page
-        if text.strip() and text.strip() not in running
+        if text.strip() and not is_furniture(text)
     ]
     body_median = statistics.median(sizes) if sizes else 0.0
 
@@ -80,7 +116,7 @@ def build_body(pages):
     for page in pages:
         for text, size in page:
             t = text.strip()
-            if not t or t in running:
+            if not t or is_furniture(text):
                 flush()
                 continue
             level = is_heading(size, body_median)

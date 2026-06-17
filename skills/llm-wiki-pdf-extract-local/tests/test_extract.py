@@ -39,15 +39,19 @@ def test_find_running_lines_detects_repeated_header():
     ]
     running = find_running_lines(pages, min_ratio=0.6)
     assert "Journal of PCM" in running
-    assert "1" in running and "2" in running and "3" in running
     assert "intro text" not in running
+    # bare page numbers normalize to '' and are not returned here
+    assert "" not in running
 
 
-def test_find_running_lines_ignores_long_repeated_body():
+def test_find_running_lines_long_line_furniture_by_recurrence():
     long_line = "x" * 120
-    pages = [[long_line], [long_line]]
-    # long, non-digit -> not treated as running furniture
-    assert long_line not in find_running_lines(pages, min_ratio=0.5)
+    # appears on 3/3 pages -> furniture even though it is long
+    pages_all = [[long_line], [long_line], [long_line]]
+    assert long_line in find_running_lines(pages_all, min_ratio=0.6)
+    # appears on 1/3 pages -> real content, not furniture
+    pages_one = [[long_line], ["other a"], ["other b"]]
+    assert long_line not in find_running_lines(pages_one, min_ratio=0.6)
 
 
 from extract import build_body
@@ -160,3 +164,36 @@ def test_cli_handles_non_ascii_body(tmp_path):
     )
     data = json.loads(proc.stdout)
     assert "Müller" in data["body"] or "Frühjahr" in data["body"]
+
+
+def test_find_running_lines_collapses_trailing_page_number():
+    # same footer differing only by trailing page number must collapse to one key
+    pages = [
+        ["Vol. 18, No. 17 / OPTICS EXPRESS  18383", "body one"],
+        ["Vol. 18, No. 17 / OPTICS EXPRESS  18384", "body two"],
+        ["Vol. 18, No. 17 / OPTICS EXPRESS  18385", "body three"],
+    ]
+    running = find_running_lines(pages, min_ratio=0.6)
+    assert "Vol. 18, No. 17 / OPTICS EXPRESS" in running
+
+
+def test_build_body_drops_pagenumber_footers_and_bare_numbers():
+    pages = [
+        [
+            ("Real sentence on page one.", 10.0),
+            ("Vol. 18, No. 17 / OPTICS EXPRESS  18383", 9.0),
+            ("7", 9.0),
+        ],
+        [
+            ("Real sentence on page two.", 10.0),
+            ("Vol. 18, No. 17 / OPTICS EXPRESS  18384", 9.0),
+            ("8", 9.0),
+        ],
+    ]
+    out = build_body(pages)
+    assert "Real sentence on page one." in out
+    assert "Real sentence on page two." in out
+    assert "OPTICS EXPRESS" not in out      # footer collapsed + dropped
+    assert "18383" not in out and "18384" not in out
+    # bare page-number lines dropped
+    assert "\n7\n" not in out and not out.strip().endswith("7")
