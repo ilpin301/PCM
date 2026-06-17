@@ -1,0 +1,1 @@
+Create a skill based on all parts of our conversation related to checking, deleting, and searching open-source sources ( fix the paywalled sources) from notebooklm. When creating, consider all existing errors to avoid them in the future.

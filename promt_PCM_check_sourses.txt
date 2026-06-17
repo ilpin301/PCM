@@ -1,0 +1,58 @@
+Here's a single, self-contained audit prompt tuned to your PCM project. Paste it into the NotebookLM chat (with all
+  sources loaded).
+
+  You are auditing the sources loaded in this notebook for a deep, expert-level
+  literature review on "Phase Change Materials" (PCM), covering BOTH meanings:
+    (A) Chalcogenide PCM for data storage, electronics and photonics — e.g.
+        Ge-Sb-Te (GST, Ge2Sb2Te5), GeTe, Sb2Te3, AIST (AIST stands for
+        Ag-In-Sb-Te), doped and interfacial PCM, superlattices, PCRAM/PRAM,
+        optical data storage, neuromorphic/photonic computing.
+    (B) PCM for thermal energy storage and thermal management — e.g. paraffins,
+        fatty acids, sugar alcohols, salt hydrates, eutectics, microencapsulated/
+        shape-stabilized/composite PCM, buildings, electronics cooling.
+  Special emphasis: characterization by Atomic Force Microscopy (AFM)/scanning
+  probe microscopy (SPM) and Scanning Electron Microscopy (SEM)/FE-SEM for
+  morphology, microstructure, surface topography and phase/grain evolution.
+
+  Use ONLY the loaded sources. Ground every statement in a specific source and
+  attach an inline citation. Do not use outside knowledge. If something cannot be
+  determined from the sources, say so explicitly.
+
+  Produce a report in four parts:
+
+  PART 1 — RELEVANCE
+  For EACH source, output a table row: source title | domain (A / B / both / neither)
+  | relevance (high / medium / low / off-topic) | covers AFM or SEM? (yes/no) |
+  one-sentence justification | citation.
+  Then list sources to consider excluding, with the reason.
+
+  PART 2 — SOURCE QUALITY
+  Flag any source that is NOT a peer-reviewed or otherwise authoritative scientific
+  work (e.g. blog, vendor/marketing page, news aggregator, content farm,
+  encyclopedia such as Wikipedia, or an unvetted preprint). For each flagged item
+  give the source, the issue, and a citation.
+
+  PART 3 — CONSISTENCY / CONTRADICTIONS
+  Compare the sources against each other and surface contradictions and
+  disagreements: conflicting claims, mismatched numerical values (e.g.
+  crystallization/melting temperatures, switching speeds, latent heat, thermal
+  conductivity, cycling endurance), and opposite conclusions or recommendations.
+  For each, give: (1) the issue, (2) what source #1 says + citation, (3) what
+  source #2 says + citation, (4) likely cause (different compositions, measurement
+  conditions, or methods). Group by topic. Separately note key points where the
+  sources clearly AGREE.
+
+  PART 4 — COVERAGE GAPS
+  List sub-topics of the stated scope (materials, mechanisms, characterization —
+  especially AFM/SEM — applications, open challenges, and the overlap between
+  domains A and B) that are claimed in scope but thinly covered or missing from
+  the loaded sources.
+
+  Keep every claim source-backed with a citation. Write the report in English.
+
+  Пара замечаний по использованию:
+  - Если источников много и ответ обрывается — запускай по частям: попроси сначала «only PART 1 and PART 2», затем
+  отдельным сообщением «now PART 3», затем «now PART 4».
+  - Для прицельной сверки чисел добавь после отчёта: "Now collect every reported crystallization temperature of GST
+  into one table with citations and flag discrepancies."
+  - Результат сохрани кнопкой Save to note.

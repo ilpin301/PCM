@@ -1,0 +1,55 @@
+RESEARCH QUESTION
+Find and analyze the most authoritative scientific literature on Phase Change
+Materials (PCM), covering BOTH meanings of the term: (A) chalcogenide
+phase-change materials for memory, electronics and photonics (Ge-Sb-Te / GST,
+GeTe, Sb2Te3, doped and interfacial PCM, GeTe/Sb2Te3 superlattices, PCRAM,
+optical data storage, neuromorphic and photonic computing) and (B) phase-change
+materials for thermal energy storage and thermal management (paraffins, fatty
+acids, sugar alcohols, salt hydrates, eutectics, microencapsulated /
+shape-stabilized / composite PCMs; buildings, electronics cooling, solar
+thermal). Map the materials, mechanisms, characterization methods, recent
+advances, applications and open challenges across both domains, and note where
+the two fields connect.
+
+WHICH SOURCES TO FIND (and how to rank them)
+- Only scientific, peer-reviewed, authoritative sources: reputable journals and
+  high-impact reviews from Nature / Nature Materials / Nature Communications,
+  Science / AAAS, Wiley (Advanced Materials, Advanced Functional Materials),
+  Elsevier, ACS, RSC, IEEE, AIP (Applied Physics Letters, J. Appl. Phys.), IOP,
+  Springer. Treat arXiv preprints as supporting material only and mark them as
+  non-peer-reviewed. Exclude blogs, vendor/marketing pages, news aggregators and
+  encyclopedias (e.g. Wikipedia) as primary evidence.
+- Language preference: English first, then German, then Russian. Include German
+  or Russian sources when they add value not well covered in English, and
+  summarize them in English.
+- Recency: no hard date cutoff, but prefer the most recent work when sources are
+  otherwise comparable; still include seminal/foundational works for context.
+- PRIORITY: give extra weight to sources that explicitly use and describe
+  Atomic Force Microscopy and Scanning Electron Microscopy characterization,
+  especially those containing the phrases "Atom Force Microscopy methods"
+  (a.k.a. "Atomic Force Microscopy", AFM) and "Scanning Electron Microscopy
+  methods" (a.k.a. SEM). Treat AFM/SEM characterization of morphology,
+  microstructure, surface topography and phase/grain evolution as a central
+  thread of the research.
+
+SEARCH KEYWORDS (expand equivalently, including DE/RU forms)
+phase change material(s) / PCM; phase-change memory, PCRAM/PRAM, chalcogenide,
+Ge-Sb-Te, GST, Ge2Sb2Te5, GeTe, Sb2Te3, AIST, interfacial PCM, GeTe/Sb2Te3
+superlattice, amorphization/crystallization, threshold switching, optical data
+storage, neuromorphic/photonic computing; thermal energy storage (TES), latent
+heat storage (LHS/LHTES), paraffin, fatty acid, salt hydrate, eutectic,
+microencapsulated/shape-stabilized/composite PCM, thermal management,
+battery/electronics cooling; atomic force microscopy (AFM)/scanning probe
+microscopy (SPM), scanning electron microscopy (SEM)/FE-SEM, TEM, XRD, Raman,
+DSC, morphology, microstructure, surface topography. AIST stands for Ag-In-Sb-Te. (DE) Phasenwechselmaterial,
+Phasenwechselspeicher, Latentwärmespeicher, Rasterkraftmikroskopie,
+Rasterelektronenmikroskopie (REM); (RU) материалы с фазовым переходом, фазовая
+память, аккумулирование тепла, атомно-силовая микроскопия, растровая электронная
+микроскопия.
+
+DELIVERABLE
+Build a broad, de-duplicated, representative set of sources spanning the key
+subtopics of both domains, with dedicated emphasis on AFM/SEM characterization.
+For each source, note its publication year and language (EN/DE/RU) and flag any
+non-peer-reviewed items. Summarize the findings in English at an expert
+technical level.

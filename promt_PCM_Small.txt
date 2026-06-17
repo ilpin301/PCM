@@ -1,0 +1,31 @@
+Conduct deep research on Phase Change Materials (PCM), covering BOTH meanings:
+(A) chalcogenide PCM for memory/photonics (Ge-Sb-Te/GST, GeTe, Sb2Te3,
+interfacial & superlattice PCM, PCRAM, optical data storage, neuromorphic /
+photonic computing) and (B) thermal-energy-storage PCM (paraffins, fatty acids,
+salt hydrates, eutectics, encapsulated/composite PCMs, buildings, electronics
+cooling). Use only peer-reviewed, authoritative scientific sources (Nature,
+Science, Wiley/Advanced Materials, Elsevier, ACS, RSC, IEEE, AIP, Springer);
+exclude blogs, marketing pages, and encyclopedias. Prefer English first, then
+German, then Russian, and summarize everything in English. No hard date cutoff,
+but prefer the most recent sources when they are otherwise comparable, while
+keeping seminal works. Give extra weight to sources using Atomic Force Microscopy
+("Atom Force Microscopy methods", AFM) and Scanning Electron Microscopy
+("Scanning Electron Microscopy methods", SEM) - treat AFM/SEM characterization
+(morphology, microstructure, surface topography, phase/grain evolution) as a
+central thread. Write the synthesis in English at an expert technical level, with
+full citations, publication years, and the language of each source marked.
+
+Keywords / synonyms to broaden retrieval: phase change material(s), PCM,
+phase-change memory, PCRAM/PRAM, chalcogenide, Ge-Sb-Te/GST, Ge2Sb2Te5, GeTe,
+Sb2Te3, AIST, interfacial PCM, GeTe/Sb2Te3 superlattice, amorphization/crystallization,
+threshold switching, optical data storage, neuromorphic/photonic computing;
+thermal energy storage (TES), latent heat storage (LHS/LHTES), paraffin, fatty
+acid, salt hydrate, eutectic, microencapsulated/shape-stabilized/composite PCM,
+thermal management, battery/electronics cooling; characterization: atomic force
+microscopy (AFM)/scanning probe microscopy (SPM), scanning electron microscopy
+(SEM)/FE-SEM, plus TEM, XRD, Raman, DSC, morphology, microstructure, surface
+topography. AIST stands for Ag-In-Sb-Te. Non-English equivalents: (DE) Phasenwechselmaterial,
+Phasenwechselspeicher, Latentwärmespeicher, Rasterkraftmikroskopie,
+Rasterelektronenmikroskopie (REM); (RU) материалы с фазовым переходом, фазовая
+память, аккумулирование тепла, атомно-силовая микроскопия, растровая электронная
+микроскопия.
