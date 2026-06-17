@@ -1,4 +1,20 @@
-from extract import join_dehyphenated, find_running_lines
+from extract import join_dehyphenated, find_running_lines, is_heading, is_scanned
+
+
+def test_is_heading_levels():
+    assert is_heading(20.0, 10.0) == 2   # 2.0x -> h2
+    assert is_heading(12.5, 10.0) == 3   # 1.25x -> h3
+    assert is_heading(10.5, 10.0) == 0   # ~body -> not a heading
+
+
+def test_is_heading_zero_body_median_is_safe():
+    assert is_heading(12.0, 0.0) == 0
+
+
+def test_is_scanned_threshold():
+    assert is_scanned(20.0) is True
+    assert is_scanned(5000.0) is False
+    assert is_scanned(100.0) is False    # boundary is exclusive
 
 
 def test_join_dehyphenated_merges_hyphenated_break():
