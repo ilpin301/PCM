@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Low-token local PDF -> markdown extractor for llm-wiki-pdf-extract-local."""
 
+import statistics
 from collections import Counter
 
 
@@ -49,3 +50,47 @@ def is_heading(size, body_median):
 def is_scanned(avg_chars_per_page, threshold=100.0):
     """True when average characters per page is below the text-layer threshold."""
     return avg_chars_per_page < threshold
+
+
+def build_body(pages):
+    """Assemble cleaned markdown from pages of (line_text, font_size) tuples."""
+    pages_text = [[t for t, _ in page] for page in pages]
+    running = find_running_lines(pages_text, min_ratio=2.0 if len(pages_text) == 1 else 0.6)
+
+    sizes = [
+        size
+        for page in pages
+        for text, size in page
+        if text.strip() and text.strip() not in running
+    ]
+    body_median = statistics.median(sizes) if sizes else 0.0
+
+    blocks = []          # ("h", level, text) or ("p", text)
+    para = []            # buffered body lines for the current paragraph
+
+    def flush():
+        if para:
+            blocks.append(("p", join_dehyphenated(para)))
+            para.clear()
+
+    for page in pages:
+        for text, size in page:
+            t = text.strip()
+            if not t or t in running:
+                flush()
+                continue
+            level = is_heading(size, body_median)
+            if level:
+                flush()
+                blocks.append(("h", level, t))
+            else:
+                para.append(t)
+        flush()
+
+    rendered = []
+    for block in blocks:
+        if block[0] == "h":
+            rendered.append("#" * block[1] + " " + block[2])
+        else:
+            rendered.append(block[1])
+    return "\n\n".join(rendered)

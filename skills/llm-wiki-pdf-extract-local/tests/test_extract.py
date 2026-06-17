@@ -48,3 +48,35 @@ def test_find_running_lines_ignores_long_repeated_body():
     pages = [[long_line], [long_line]]
     # long, non-digit -> not treated as running furniture
     assert long_line not in find_running_lines(pages, min_ratio=0.5)
+
+
+from extract import build_body
+
+
+def test_build_body_emits_headings_and_paragraphs():
+    pages = [
+        [
+            ("Introduction", 20.0),
+            ("This sentence is", 10.0),
+            ("on two lines.", 10.0),
+        ],
+    ]
+    out = build_body(pages)
+    assert "## Introduction" in out
+    assert "This sentence is on two lines." in out
+
+
+def test_build_body_drops_running_furniture():
+    pages = [
+        [("Journal X", 10.0), ("real body one", 10.0)],
+        [("Journal X", 10.0), ("real body two", 10.0)],
+    ]
+    out = build_body(pages)
+    assert "Journal X" not in out
+    assert "real body one" in out
+    assert "real body two" in out
+
+
+def test_build_body_dehyphenates_across_lines():
+    pages = [[("hyphen-", 10.0), ("ation works", 10.0)]]
+    assert "hyphenation works" in build_body(pages)
