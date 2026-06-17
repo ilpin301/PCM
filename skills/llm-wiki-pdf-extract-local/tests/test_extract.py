@@ -90,7 +90,9 @@ def _make_pdf(path):
     doc = fitz.open()
     page = doc.new_page()
     page.insert_text((72, 72), "Big Heading", fontsize=20)
-    page.insert_text((72, 110), "Normal body sentence here.", fontsize=11)
+    # Add substantial body text so avg_chars_per_page > 100 (non-scanned threshold)
+    body_text = "Normal body sentence here. " * 6
+    page.insert_text((72, 110), body_text, fontsize=11)
     doc.save(str(path))
     doc.close()
 
@@ -115,3 +117,27 @@ def test_extract_pages_pdftotext_fallback_has_text_no_headings(tmp_path):
     assert result["engine"] == "pdftotext"
     assert "Big Heading" in result["first_pages_text"]
     assert all(size == 1.0 for page in result["pages"] for _, size in page)
+
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+EXTRACT = str(Path(__file__).resolve().parent.parent / "extract.py")
+
+
+def test_cli_prints_expected_json(tmp_path):
+    pdf = tmp_path / "sample.pdf"
+    _make_pdf(pdf)
+    proc = subprocess.run(
+        [sys.executable, EXTRACT, str(pdf), "--engine", "fitz"],
+        capture_output=True, text=True, check=True,
+    )
+    data = json.loads(proc.stdout)
+    assert set(data) == {
+        "body", "first_pages_text", "page_count",
+        "avg_chars_per_page", "scanned", "engine",
+    }
+    assert data["scanned"] is False
+    assert "## Big Heading" in data["body"]

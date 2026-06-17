@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Low-token local PDF -> markdown extractor for llm-wiki-pdf-extract-local."""
 
+import argparse
+import json
 import statistics
 import subprocess
 from collections import Counter
@@ -165,3 +167,27 @@ def extract_pages(pdf_path, engine="auto"):
         "avg_chars_per_page": avg,
         "engine": engine,
     }
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Local low-token PDF text extractor.")
+    parser.add_argument("pdf", help="path to the PDF file")
+    parser.add_argument(
+        "--engine", choices=["auto", "fitz", "pdftotext"], default="auto"
+    )
+    args = parser.parse_args(argv)
+
+    data = extract_pages(args.pdf, engine=args.engine)
+    out = {
+        "body": build_body(data["pages"]),
+        "first_pages_text": data["first_pages_text"],
+        "page_count": data["page_count"],
+        "avg_chars_per_page": data["avg_chars_per_page"],
+        "scanned": is_scanned(data["avg_chars_per_page"]),
+        "engine": data["engine"],
+    }
+    print(json.dumps(out, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()
