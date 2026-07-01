@@ -80,3 +80,78 @@ def list_chrome_windows():
 
     win32gui.EnumWindows(_cb, None)
     return found
+
+
+def screenshot_window(win: WinInfo, dest):
+    """Screenshot the window's screen rect to `dest` (path-like)."""
+    import pyautogui
+
+    left, top, right, bottom = win.rect
+    region = (left, top, max(1, right - left), max(1, bottom - top))
+    pyautogui.screenshot(region=region).save(str(dest))
+    return Path(dest)
+
+
+def _parse_vision_json(text: str, win: WinInfo) -> dict:
+    m = re.search(r"\{.*\}", text or "", re.S)
+    if not m:
+        return {"click": False}
+    try:
+        obj = json.loads(m.group(0))
+    except json.JSONDecodeError:
+        return {"click": False}
+    if not obj.get("click"):
+        return {"click": False}
+    try:
+        x, y = int(obj["x"]), int(obj["y"])
+    except (KeyError, TypeError, ValueError):
+        return {"click": False}
+    left, top, right, bottom = win.rect
+    if not (left <= x <= right and top <= y <= bottom):
+        return {"click": False}
+    return {"click": True, "x": x, "y": y}
+
+
+def vision_locate_via_cli(image_path, win: WinInfo) -> dict:
+    """Ask Haiku (via `claude -p`) where the Cloudflare checkbox is.
+
+    Reuses the session's auth — no separate API key. If `claude` is missing
+    or the `@path` image mechanism from Step 1 does not work, swap this body
+    for an `anthropic` SDK call with a base64 image block + ANTHROPIC_API_KEY;
+    the signature stays the same.
+    """
+    left, top, _r, _b = win.rect
+    prompt = (
+        f"You locate a UI element in a screenshot. The screenshot's top-left is "
+        f"at absolute screen pixel ({left}, {top}). If the image contains an "
+        f"interactive Cloudflare checkbox ('Verify you are human' / "
+        f"'I'm not a robot'), reply ONLY JSON: {{\"click\": true, \"x\": <int>, "
+        f"\"y\": <int>}} where x,y are ABSOLUTE screen coordinates of the checkbox "
+        f"center. If there is no clickable checkbox (passive 'Just a moment', or "
+        f"the real page already loaded), reply ONLY {{\"click\": false}}. "
+        f"@{image_path}"
+    )
+    try:
+        proc = subprocess.run(
+            ["claude", "-p", "--model", VISION_MODEL, prompt],
+            capture_output=True, text=True, timeout=60,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return {"click": False}
+    return _parse_vision_json(proc.stdout, win)
+
+
+def locate_checkbox(win: WinInfo, vision_fn=vision_locate_via_cli, image_path=None):
+    """Return (x, y) screen coords of the checkbox, or None if none found.
+
+    `vision_fn` is injectable so tests don't need a live model or browser.
+    """
+    image_path = image_path or Path(tempfile.gettempdir()) / f"cf_click_{win.hwnd}.png"
+    try:
+        screenshot_window(win, image_path)
+    except Exception:
+        return None
+    res = vision_fn(image_path, win)
+    if res.get("click"):
+        return (res["x"], res["y"])
+    return None
