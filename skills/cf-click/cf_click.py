@@ -155,3 +155,59 @@ def locate_checkbox(win: WinInfo, vision_fn=vision_locate_via_cli, image_path=No
     if res.get("click"):
         return (res["x"], res["y"])
     return None
+
+
+@dataclass
+class Watcher:
+    detect: object            # callable() -> WinInfo | None
+    locate: object            # callable(WinInfo) -> tuple | None
+    click: object             # callable(point, WinInfo) -> None
+    log: object = lambda **k: None
+    max_attempts: int = MAX_ATTEMPTS
+    max_total_clicks: int = MAX_TOTAL_CLICKS
+    state: str = "IDLE"
+    click_attempts: int = 0
+    total_clicks: int = 0
+    handled: int = 0
+    gave_up: int = 0
+    abandoned_hwnd: object = None  # hwnd we gave up on; skip until it clears
+
+    def tick(self) -> str:
+        if self.total_clicks >= self.max_total_clicks:
+            return "STOP"
+        win = self.detect()
+        if win is None:
+            if self.state in ("CHALLENGE", "VERIFY") and self.abandoned_hwnd is None:
+                self.handled += 1
+                self.log(event="CLEARED")
+            self.state = "IDLE"
+            self.click_attempts = 0
+            self.abandoned_hwnd = None
+            return "IDLE"
+        if self.abandoned_hwnd == win.hwnd:
+            return "ABANDONED"
+        coords = self.locate(win)
+        if coords is None:
+            self.state = "VERIFY"
+            return "NO_CHECKBOX"
+        if self.click_attempts >= self.max_attempts:
+            self.abandoned_hwnd = win.hwnd
+            self.gave_up += 1
+            self.state = "IDLE"
+            self.log(event="GIVE_UP", hwnd=win.hwnd)
+            return "GIVE_UP"
+        self.click(coords, win)
+        self.total_clicks += 1
+        self.click_attempts += 1
+        self.state = "CHALLENGE"
+        self.log(event="CLICKED", hwnd=win.hwnd, x=coords[0], y=coords[1])
+        return "CLICKED"
+
+    def run(self, sleep=None):
+        if sleep is None:
+            sleep = lambda: time.sleep(random.uniform(LOOP_MIN, LOOP_MAX))
+        while True:
+            result = self.tick()
+            if result == "STOP":
+                break
+            sleep()
