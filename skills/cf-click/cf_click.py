@@ -211,3 +211,140 @@ class Watcher:
             if result == "STOP":
                 break
             sleep()
+
+
+def humanized_click(point, win: WinInfo):
+    """Bring the window forward and click `point` with humanized movement."""
+    import pyautogui
+    import win32gui
+
+    try:
+        win32gui.ShowWindow(win.hwnd, 9)            # SW_RESTORE
+        win32gui.SetForegroundWindow(win.hwnd)
+    except Exception:
+        pass
+    x, y = point
+    pyautogui.moveTo(x, y, duration=random.uniform(0.25, 0.6),
+                     tween=pyautogui.easeOutQuad)
+    time.sleep(random.uniform(0.08, 0.25))
+    pyautogui.click(x, y)
+
+
+# ---- logging + lifecycle ----
+
+def log_event(**fields):
+    RUNDIR.mkdir(parents=True, exist_ok=True)
+    fields.setdefault("ts", time.strftime("%Y-%m-%dT%H:%M:%S"))
+    with open(LOGFILE, "a", encoding="utf-8") as f:
+        f.write(json.dumps(fields, ensure_ascii=False) + "\n")
+
+
+def _pid_alive(pid) -> bool:
+    if not pid:
+        return False
+    try:
+        out = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
+            capture_output=True, text=True, timeout=10,
+        ).stdout
+        return str(pid) in out
+    except Exception:
+        return False
+
+
+def _summary() -> str:
+    clicks = gave_up = cleared = 0
+    last = ""
+    if Path(LOGFILE).exists():
+        for line in Path(LOGFILE).read_text(encoding="utf-8").splitlines():
+            try:
+                o = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if o.get("event") == "CLICKED":
+                clicks += 1
+            elif o.get("event") == "CLEARED":
+                cleared += 1
+            elif o.get("event") == "GIVE_UP":
+                gave_up += 1
+            if o.get("ts"):
+                last = o["ts"]
+    return f"clicks={clicks} cleared={cleared} gave_up={gave_up} last={last}"
+
+
+def cmd_start():
+    RUNDIR.mkdir(parents=True, exist_ok=True)
+    if PIDFILE.exists() and _pid_alive(PIDFILE.read_text().strip()):
+        print(f"already running (pid {PIDFILE.read_text().strip()})")
+        return
+    flags = 0x00000008 | 0x00000200  # DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP
+    with open(LOGFILE, "a", encoding="utf-8") as out:
+        proc = subprocess.Popen(
+            [sys.executable, str(Path(__file__).resolve()), "watch"],
+            stdout=out, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+            creationflags=flags, close_fds=True,
+        )
+    PIDFILE.write_text(str(proc.pid))
+    print(f"started watcher pid {proc.pid}; log {LOGFILE}")
+
+
+def cmd_stop():
+    if not PIDFILE.exists():
+        print("not running")
+        return
+    pid = PIDFILE.read_text().strip()
+    subprocess.run(["taskkill", "/PID", pid, "/F", "/T"], capture_output=True)
+    PIDFILE.unlink(missing_ok=True)
+    print(_summary())
+
+
+def cmd_status():
+    running = PIDFILE.exists() and _pid_alive(PIDFILE.read_text().strip())
+    print(f"running: {running}")
+    print(_summary())
+
+
+def _make_real_watcher():
+    return Watcher(
+        detect=lambda: select_target_window(list_chrome_windows()),
+        locate=lambda win: locate_checkbox(win),
+        click=humanized_click,
+        log=log_event,
+    )
+
+
+def cmd_watch():
+    RUNDIR.mkdir(parents=True, exist_ok=True)
+    log_event(event="START")
+    w = _make_real_watcher()
+    w.run()
+    log_event(event="STOP", total_clicks=w.total_clicks,
+              handled=w.handled, gave_up=w.gave_up)
+
+
+def cmd_self_test(image=None):
+    win = WinInfo(0, "self-test", (0, 0, 1920, 1080))
+    coords = locate_checkbox(win, image_path=Path(image)) if image else None
+    print(f"locate -> {coords}")
+
+
+def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    cmd = argv[0] if argv else "status"
+    if cmd == "start":
+        cmd_start()
+    elif cmd == "stop":
+        cmd_stop()
+    elif cmd == "status":
+        cmd_status()
+    elif cmd == "watch":
+        cmd_watch()
+    elif cmd == "self-test":
+        cmd_self_test(argv[1] if len(argv) > 1 else None)
+    else:
+        print("usage: cf_click.py [start|stop|status|watch|self-test [image]]")
+        sys.exit(2)
+
+
+if __name__ == "__main__":
+    main()

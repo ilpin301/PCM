@@ -8,3 +8,5 @@ Raw/Files/*
 !Raw/Files/.gitkeep
 Drafts/
 .claude/
+__pycache__/
+.cf-click/
