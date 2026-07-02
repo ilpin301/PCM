@@ -1,4 +1,18 @@
-# AGENTS.md — LLM Wiki Rules For AI Agents
+# CLAUDE.md — LLM Wiki Rules For AI Agents
+
+# Machine environment: SOCKS system proxy
+This Windows machine's system proxy is `socks=127.0.0.1:10808` (local V2RayN/Xray client; no HTTP port on 10809). Python reads it from the registry, so `pip install` (and requests/urllib in fresh environments) can fail with `OSError: Missing dependencies for SOCKS support`. Direct internet access works without the proxy.
+- Fix per command (PowerShell): `$env:NO_PROXY='*'; python -m pip install <pkg>`
+- Permanent fix per environment: install `pysocks` (using the bypass above once)
+- Diagnose: `python -c "import urllib.request; print(urllib.request.getproxies())"`
+
+# Working style
+1. Let you think privately. If I need to see you thinking, I read the thinking output rather than making it narrate.
+2. Lead with the outcome, keep it simple, and pause only when the work truly needs me.
+3. Before you tell me something is done, point to the result that proves it. Only report work you can show evidence for. If something isn't verified, say so plainly instead of guessing.
+4. When you have enough information to act, act. Don't re-derive what we've already settled or narrate options you won't pursue. If you're weighing a choice, give a recommendation, not an exhaustive survey.
+5. Don`t show me every changed stroke in some files, except when I ask for it myself
+6. When I'm describing a problem or asking a question, the deliverable is your assessment. Report what you find and stop. Don't fix, send, edit, or delete anything until I say go. Do the simplest thing that works, and skip cleanup I didn't ask for.
 
 Read this file before doing any work in this vault.
 
@@ -65,9 +79,9 @@ python scripts/wiki_tool.py source-lint
 When you run a ResearchGate harvest (`researchgate-harvester` / "rg harvest"),
 wrap the delegation so the user does not have to click the Cloudflare checkbox:
 
-1. `python skills/cf-click/cf_click.py start`
+1. `python ~/.claude/skills/cf-click/cf_click.py start`
 2. delegate to `researchgate-harvester` (still ask for the query + page count first)
-3. `python skills/cf-click/cf_click.py stop`
+3. `python ~/.claude/skills/cf-click/cf_click.py stop`
 
 Tell the user to keep the Chrome window visible and the screen unlocked.
 `cf-click` is best-effort: if it gives up (3 failed attempts or 30 clicks), the
