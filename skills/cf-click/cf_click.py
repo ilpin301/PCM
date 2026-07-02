@@ -141,6 +141,35 @@ def vision_locate_via_cli(image_path, win: WinInfo) -> dict:
     return _parse_vision_json(proc.stdout, win)
 
 
+def ensure_window_visible(win: WinInfo, api=None, sleep=time.sleep):
+    """Restore/foreground the window if minimized or behind, return fresh WinInfo.
+
+    A minimized window reports a bogus rect (-32000, ...), so the screenshot —
+    and therefore vision — is garbage unless we restore it first. `api` is an
+    injectable win32gui stand-in for tests. Best-effort: any failure returns
+    the original `win` unchanged and the tick proceeds as before.
+    """
+    if api is None:
+        import win32gui as api
+    try:
+        changed = False
+        if api.IsIconic(win.hwnd):
+            api.ShowWindow(win.hwnd, 9)  # SW_RESTORE
+            changed = True
+        if api.GetForegroundWindow() != win.hwnd:
+            try:
+                api.SetForegroundWindow(win.hwnd)
+            except Exception:
+                # Windows foreground-lock can reject this; at least raise in Z-order
+                api.BringWindowToTop(win.hwnd)
+            changed = True
+        if changed:
+            sleep(0.3)  # let the window settle before screenshotting
+        return WinInfo(win.hwnd, win.title, api.GetWindowRect(win.hwnd))
+    except Exception:
+        return win
+
+
 def locate_checkbox(win: WinInfo, vision_fn=vision_locate_via_cli, image_path=None):
     """Return (x, y) screen coords of the checkbox, or None if none found.
 
@@ -307,7 +336,7 @@ def cmd_status():
 def _make_real_watcher():
     return Watcher(
         detect=lambda: select_target_window(list_chrome_windows()),
-        locate=lambda win: locate_checkbox(win),
+        locate=lambda win: locate_checkbox(ensure_window_visible(win)),
         click=humanized_click,
         log=log_event,
     )
