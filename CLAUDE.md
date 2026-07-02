@@ -76,16 +76,14 @@ python scripts/wiki_tool.py source-lint
 
 ### Cloudflare auto-clicker (cf-click) for ResearchGate harvests
 
-When you run a ResearchGate harvest (`researchgate-harvester` / "rg harvest"),
-wrap the delegation so the user does not have to click the Cloudflare checkbox:
-
-1. `python ~/.claude/skills/cf-click/cf_click.py start`
-2. delegate to `researchgate-harvester` (still ask for the query + page count first)
-3. `python ~/.claude/skills/cf-click/cf_click.py stop`
+The `researchgate-harvester` subagent now self-manages the `cf-click` auto-clicker
+(starts it before the browser opens, stops it when done). You do NOT need to wrap
+the delegation — just delegate normally (ask for the query + page count first).
 
 Tell the user to keep the Chrome window visible and the screen unlocked.
 `cf-click` is best-effort: if it gives up (3 failed attempts or 30 clicks), the
 user clicks manually — the harvester's own ~3-min title poll is the safety net.
+cf-click lives globally at `~/.claude/skills/cf-click/cf_click.py`.
 
 ### Schema
 
